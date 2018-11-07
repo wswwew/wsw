@@ -1,0 +1,54 @@
+选择解释器
+setting---project:untitled---project:interpreter----地址栏小齿轮---add local--选择/usr/local/bin/python3.6
+
+git使用
+设置用户信息:
+git config --global user.name 'wsw' #设置用户名
+git config --global user.email '345740575@qq.com' #设置用户邮箱
+git config --global core.editor vim #设置默认编辑器
+git config --list #查看配置信息
+创建版本库：
+1.mkdir并cd进一个新的目录
+2.git init #初始化空的Git版本库
+基本使用：
+git add hello.py #提交文件hello.py到暂存区 
+git status [选项]#查看git当前状态,-s:简洁显示 -A:新增文件 -D:本地删除的文件
+git commit #提交文件,-m:“添加描述信息”,-a:对更新后的文件进行提交(相当于先add,再提交)
+git ls-files #查看版本库中的文件
+git rm #删除文件,提交到暂存区
+
+docker run -d -h gitlab --name gitlab -p 443:443 -p 80:80 -p 22:22 --restart always -v /srv/gitlab/config:/etc/gitlab -v /srv/gitlab/logs:/var/log/gitlab -v /srv/gitlab/data gitlab_zh:latest
+#-h :指定docker容器主机名,--name :指定容器名,--restart always :设置出现问题重启
+
+访问gitlab
+直接访问本机ip,管理员用户名root,设置密码
+创建群组,新建项目,用户,添加成员到群组,设置为主程序员
+
+配置远程仓库:
+名词解析:origin就是一个名字，它是在你clone一个托管在Github上代码库时，git为你默认创建的指向这个远程代码库的标签
+
+git remote rename origin old-origin #将旧origin改名为old-origin
+git remote add origin http://192.168.4.254/wsw/core_py.git #添加新的origin
+上传代码:
+git push -u origin --all #这里origin指的就是默认的仓库.--all:所有分支
+Username for 'http://192.168.4.254': root
+Password for 'http://root@192.168.4.254':
+
+用密钥登陆git仓库进行操作
+1.生成密钥对之后将公钥复制添加到服务器对应用户的密钥中
+2.本机将私钥添加给ssh-agent
+ssh-agent
+ssh-add /.ssh/密钥
+远程仓库下载
+git clone git@gitlab:wsw/core_py.git
+git pull origin master #origin 指定标签,master指定分支
+
+
+
+
+
+
+
+
+
+

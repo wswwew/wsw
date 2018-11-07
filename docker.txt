@@ -1,0 +1,107 @@
+/usr/lib/systemd/system/ :后台服务的存放目录
+
+linux两大派系主要区别
+RHEL      DEBIAN
+rpm       dpkg
+rpm -qa   dpkg -l
+yum       apt-get
+
+kvm基于底层虚拟化技术
+docker基于进程切分,本质上是一个隔离出来的被限制的进程
+隔离的内容:
+1.文件系统 2.主机名 3.进程pid 4.网络
+容器技术的核心由以下几个内核技术组成:
+1.资源管理 2.进程隔离 3.selinux安全
+特点:
+1.共享物理机的环境(硬件,内核,操作系统,公共库,程序)
+2.简洁高效 3.隔离性不如虚拟化好 4.共用linux内核,安全性有先天缺陷
+5.监控排错较难
+
+命令:
+镜像命令:
+docker images :列出docker镜像
+docker search 关键字 :在官网查找
+docker pull 名字 :下载
+docker push :上传
+docker history 镜像名 :查看镜像的制作历史
+docker inspect 镜像名|容器名 :查看镜像|容器的底层信息
+dockr rmi 镜像名 :有容器使用过的无法删除,需先删除容器
+docker tag :修改镜像名与标签,实际上是制作了软链接
+docker save 名字 > 名字.tar :保存,备份镜像
+docker load < 名字.tar :加载镜像
+容器命令:
+docker run -it [参数,-it分配终端(-i: 以交互模式运行容器,-t: 为容器重新分配一个伪输入终端), -d放入后台进程] 镜像名:TAG标签(默认为latest) 镜像中的程序
+-m :设置容器使用内存最大值
+--dns 8.8.8.8: 指定容器使用的DNS服务器，默认和宿主一致
+--name "XXXXX": 为容器指定一个名称
+-h "XXXX": 指定容器的hostname
+
+docker ps [-a查看关闭的;-q缩略显示,只显示pid]:查看容器列表 可作为其他命令的参数,例:docker rm $(dock ps -aq)
+docker rm 容器ID :删除容器
+docker top 容器ID :查看指定的容器进程列表
+docker attach 容器ID :进入容器的上帝进程
+docker exec -it 容器ID 程序命令 :开启新的执行进程并进入容器
+docker commit 容器ID 镜像名:标签 :用容器制作新的镜像
+docker build -t 镜像名:标签(不能有大写字母) Dockerfile所在目录
+
+Dockerfile语法格式
+– FROM:基础镜像
+– MAINTAINER:镜像创建者信息
+– EXPOSE:开放的端口
+– ENV:设置变量
+– ADD:复制文件到镜像
+– RUN:制作镜像时执行的命令,可以有多个
+– WORKDIR:定义容器默认工作目录
+– CMD:容器启动时执行的命令,仅可以有一条CMD
+如要同时启动几个任务时可以以编写脚本
+
+Crtl+p+q 将进程转入后台但不停止
+
+docker镜像服务器
+1.自定义镜像仓库
+vim /etc/docker/daemon.json
+{
+"insecure-registries" : ["192.168.1.10:5000"]
+}
+重启docker
+启动镜像仓库:docker run -d -p 5000:5000 registry
+2.指定标签
+docker tag busybox:latest 192.168.1.10:5000/busybox:latest
+3.上传
+docker push 192.168.1.10:5000/busybox:latest
+
+第二台主机
+scp docker01:/etc/docker/daemon.json /etc/docker
+重启docker
+
+简单API
+查看http://192.168.1.10:5000/v2/_catalog
+查看http://192.168.1.10:5000/v2/镜像名/tags/list
+使用服务器上的镜像:docker run -it 192.168.1.10:5000/busybox:latest
+将真实机目录挂载到容器中提供持久化存储
+docker run -v 主机上的源目录:容器内的目标目录 -it 镜像名
+
+
+
+创建虚拟网桥(交换机)
+/etc/sysconfig/network-scripts/ifcfg-br0
+TYPE=Bridge #类型写为Bridge
+BOOTPROTO=static
+NAME=br0
+DEVICE=br0
+ONBOOT=yes
+IPADDR=........
+重启network
+brctl show :查看网桥
+
+查看docker网络模型
+docker network list
+docker network create 选项 网络名
+例:docker network create --subnet=172.30.0.0/16 docker1
+
+启动docker容器时选定网络
+docker run --network=bridge|host|none
+
+启动docker容器时绑定端口
+例:docker run -p 8080:80 -id nginx #主机端口:容器内服务端口
+
