@@ -13,9 +13,37 @@ print语句
 print(value,...,sep='',end='\n')
 sep表示两个值至之间的字符,默认为空格
 end表示最后结束的字符,默认为\n换行符
-
+例:
+>>> print("HelloWorld")
+HelloWorld
+>>> print("Hello","World")
+Hello World
+>>> print("Hello","World",sep="--",end=";")
+Hello--World;>>>
 
 输入语句
 input(提示字符串)
 运行input语句后,在提示字符串后写要输入的内容
 可以使用变量接收输入的内容,再调用变量可以看到输入的内容
+input()#接受字符串输入,输入内容将作为字符串进行运算
+int(input()) #将字符串变为整型数据
+ps:int()不可接受空值输入,但input可接受,当需要接受空值时,两者不可连用
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

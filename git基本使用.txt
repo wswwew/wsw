@@ -39,6 +39,13 @@ Password for 'http://root@192.168.4.254':
 2.本机将私钥添加给ssh-agent
 ssh-agent
 ssh-add /.ssh/密钥
+3.认证key是否生效
+ssh -T git@github.com
+4.添加对应仓库的ssh认证url
+例:git remote set-url origin git@github.com:someaccount/someproject.git
+5.查看仓库指向
+git romote -v
+
 远程仓库下载
 git clone git@gitlab:wsw/core_py.git
 git pull origin master #origin 指定标签,master指定分支
