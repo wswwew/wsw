@@ -5,9 +5,7 @@ num_you = 0
 num_ai = 0
 while num_you<2 and num_ai<2:
     player_num = input('请输入你的选择"剪刀为0 石头为1 布为2":')
-    if player_num is None:
-        continue
-    elif player_num not in ['0','1','2']:
+    if player_num not in ['0','1','2']:
         continue
     player_choice = all_choice[int(player_num)]
     ai_choice = random.choice(all_choice)
@@ -24,6 +22,6 @@ while num_you<2 and num_ai<2:
         num_ai+=1
 else:
     if num_you==2:
-        print('\n','\n',"你赢了")
+        print('\n','\n',"你赢了",sep='')
     else:
-        print('\n','\n',"你输了")
+        print('\n','\n',"你输了",sep='')
