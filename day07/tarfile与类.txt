@@ -1,0 +1,104 @@
+模块
+一个以.py作为扩展名的文件就是一个模块文件,,模块名与文件名一致,只是没有.py
+
+搜索模块路径
+当执行impport语句时,python到sys.path下定义的目录去查找模块.用户自己创建的模块,可以保存到site-packages目录,或通过环境变量PYTHONPATH定义
+[root@room9pc01 ~]# mkdir /opt/mymods
+[root@room9pc01 ~]# cp wsw/day07/randpass.py /opt/mymods
+[root@room9pc01 ~]# export PYTHONPATH=/opt/mymods/
+[root@room9pc01 ~]# python3
+>>> import randpass
+
+======================================================================
+包
+本质上就是一个目录(是一个有层次的文件目录结构),可以当成特殊的模块进行使用
+注意:在python2中,目录必须包含一个__init__.py的文件,才能成为包
+例:
+[root@room9pc01 day07]# mkdir aaa/
+[root@room9pc01 day07]# cp randpass.py aaa/
+[root@room9pc01 day07]# python3
+>>> import aaa.randpass
+
+======================================================================
+内置模块
+
+hashlib模块
+单向加密:hash(哈希0
+加密只能向一个方向进行,可以理解为相同的数据可以固定长度的乱码.原始数据相同,生成的乱码也一定相同,但是不能通过乱码回推出原始数据
+常用算法:
+md5.sha
+一般用来存储加密密码和文件完整性校验
+例:
+>>> import hashlib	
+>>> m = hashlib.md5()
+>>> with open('/etc/passwd','rb') as fobj:
+...     while True:
+...             data=fobj.read(4096)
+...             if not data:
+...                     break
+...             m.update(data)
+... 
+>>> m.hexdigest()
+'a49cb2b6868e8615690750ebfb1febfc'
+
+tarfile模块
+可以创建,访问,解压tar文件
+例:
+打包压缩:
+>>> import os
+>>> import tarfile
+>>> tar = tarfile.open('/tmp/security.tar.gz','w:gz')
+>>> os.chdir('/etc')
+>>> tar.add('security')
+>>> tar.add('hosts')
+>>> tar.close()
+解压:
+>>> os.mkdir('/tmp/anquan')
+>>> os.chdir('/tmp/anquan')
+>>> tar =tarfile.open('/tmp/security.tar.gz','r:gz')
+>>> tar.extractall()
+>>> tar.close()
+
+os模块
+递归列出目录中所有内容
+os.walk('path')
+>>> for path,folders,files in os.walk('/tmp/demo/security/'):
+...     for file in files:
+...             print(os.path.join(path,file))
+... 
+/tmp/demo/security/pwquality.conf
+/tmp/demo/security/console.handlers
+/tmp/demo/security/console.perms
+/tmp/demo/security/sepermit.conf
+/tmp/demo/security/namespace.conf
+......
+.....
+....
+
+
+
+
+
+==================================================
+类
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
