@@ -1,0 +1,156 @@
+re模块 正则模块
+re.match('f..','food')     #从开头第一个字符进行匹配,返回匹配对象
+print(re.match('f..','seafood'))    #没有匹配到,返回None
+
+re.search('f..','food')  #对全文进行匹配,返回第一个匹配对象
+re.search('f..','seafood') #可以匹配到
+一般多用search
+
+m.group() #返回匹配内容
+
+re.finditer #返回匹配列表对象,需要使用.group()返回匹配内容
+例:
+>>> for m in re.finditer('f..','seafood is food'):
+...     print(m.group()) 
+foo
+foo
+
+re.findall #返回匹配内容的列表
+
+re.split('\.|-','hello-world.tar.gz') #以点.或-作为分隔符进行切割,返回一个内容列表
+
+print(re.sub('X','zzg','Hi X\nHello X')) #查找替换
+Hi zzg
+Hello zzg
+
+在匹配量很大的时候,先将模式进行编译,可以提升效率
+标识名=re.compile('str')
+例:
+patt= re.compile('f..')
+m = patt.search('seafood')
+m.group()
+
+Counter
+
+贪婪匹配
+例:
+>>> m = re.search('.+(\d+)','My phone number is: 13726816003')
+>>> m.group()
+'My phone number is: 13726816003'
+>>> m.group(1)
+'3'
+.+是贪婪匹配,会匹配到尽可能多的内容,然\d+尽可能匹配得少
+?可以取消贪婪匹配的行为,让\d+匹配更多的内容
+例:
+>>> m = re.search('.+(\d+)','My phone number is: 13726816003')
+>>> m = re.search('.+?(\d+)','My phone number is: 13726816003')
+>>> m.group(1)
+'13726816003'
+
+socket模块
+
+1.建立套接字
+两种类型:
+面向tcp协议(传输控制协议):
+socket.socket(type=socket.SOCK_STREAM) #建立tcp套接字,默认类型,括号内类型可以不用填写.
+面向udp协议(用户数据报协议):
+socket.socket(type=socket.SOCK_DGRAM) #建立udp套接字,必须叫括号内选项选则类型
+
+2.对套接字进行进一步设置:
+s=socket.socket()
+s.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1) #1表示开启
+#SO_REUSEADDR选项
+一般来说，一个端口释放后会等待两分钟之后才能再被使用，SO_REUSEADDR是让端口释放后立即就可以被再次使用。SO_REUSEADDR用于对TCP套接字处于TIME_WAIT状态下的socket，才可以重复绑定使用。
+扩展:server程序总是应该在调用bind()之前设置SO_REUSEADDR套接字选项。TCP，"先"调用close()的一方会进入TIME_WAIT状态
+#SOL_SOCKET选项 默认选项
+
+3.绑定端口与ip地址:(监听地址与端口)
+addr=(host,port)
+s.bind(addr)
+
+4.启动监听
+s.listen(1) #1表示启动
+udp不需要
+
+5.调用套接字
+(1)tcp类型:
+s.accept()  #接受连接
+cli_sock,cli_addr =s.accept() #接收的是一个两元素元组,cli_addr取的是后面的值,等于客户端的ip地址和端口,前面cli_sock接收的是对方的套接字.
+在接受并建立连接后:
+cli_sock.recv(1024).decode() #接收对方发送信息,decode()是将bytes类型的数据解码成为str类型,1024表示一次所接受的数据多少
+cli_sock.send(data,encode()) #发送数据data,encode()是将str数据编码成为bytes进行传输
+
+(2)udp类型:
+不需要建立连接,只要是向所监听的地址端口所发送的数据都会被接收
+date,cli_addr = s.recvfrom(1024) #接收的是一个两元素元组,cli_addr取的是后面的值,等于客户端的ip地址和端口,data接收的是数据内容
+s.sendto(data.encode(),cli_addr) #编码发送
+
+6.关闭连接
+cli_sock.close()
+udp不需要
+
+7.关闭套接字
+s.close()
+
+建立客户端
+tcp:
+1.建立套接字,此部分与服务端相同
+c = socket.socket()
+c = socket.socket(type=socket.SOCK_DGRAM) #udp
+
+2.建立连接
+addr=(host,port)
+c.connect(addr)
+
+3.调用套接字,基本与服务端相同
+不需要.accept()
+c.recv(1024).decode() #直接向本机的套接字接收和发送即可
+c.send(data,encode())
+udp:
+cs.sendto(date.encode(),addr) #由于没有建立连接,发送时需指定地址
+cs.recvfrom(1024)[0].decode()) #接收的数据有两段,第二段包含地址,不需要
+
+4.关闭套接字
+c.close
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
